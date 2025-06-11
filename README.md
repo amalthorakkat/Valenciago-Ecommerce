@@ -78,6 +78,7 @@ eCommerce/
     ```
     MONGO_URI=your_mongodb_connection_string
     JWT_SECRET=your_jwt_secret
+    PORT = Your port number
     ```
 4. Start the backend server:
     ```sh
