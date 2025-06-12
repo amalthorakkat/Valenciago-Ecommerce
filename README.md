@@ -4,6 +4,8 @@ This is a full-stack eCommerce web application built with the MERN stack (MongoD
 
 ---
 
+![Screenshot of my project](Frontent/src/assets/SCT/SCT.png)
+
 ## Features
 
 - User registration and authentication (with hashed passwords)
