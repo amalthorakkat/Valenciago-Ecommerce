@@ -25,6 +25,7 @@ const cartSchema = new mongoose.Schema({
     required: true,
   },
   items: [cartItemSchema],
+  savedItems:[cartItemSchema], //for saved items
   totalPrice:{
     type:Number,
     default:0
