@@ -1,4 +1,6 @@
-# Valenciago | eCommerce Project
+<h1 align="center">
+Valenciago | eCommerce Project
+</h1>
 
 This is a full-stack eCommerce web application built with the MERN stack (MongoDB, Express.js, React, Node.js). The project supports user authentication, product management, cart functionality, and order processing.
 
