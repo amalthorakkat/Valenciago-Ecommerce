@@ -21,11 +21,11 @@ const App = () => {
         <Route path="/" element={<UserLayouts />}>
           <Route index element={<Hero />} />
           <Route path="/cart" element={<Cart />} />
-          <Route path="/:category" element={<FetchByCategory/>} />
-          <Route path="/allProducts" element={<AllProducts/>} />
-          <Route path="/results" element={<SearchResults/>}/>
-          <Route path="/checkout" element={<Checkout/>} />
-          <Route path="/products/:productId" element={<ProductDetails/>}/>
+          <Route path="/:category" element={<FetchByCategory />} />
+          <Route path="/allProducts" element={<AllProducts />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/products/:productId" element={<ProductDetails />} />
+          <Route path="/search" element={<SearchResults />} />
         </Route>
 
         {/* <Route path='/' element={<FileUpload/>} /> */}

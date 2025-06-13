@@ -15,16 +15,18 @@ module.exports.getAllProducts = async (req, res) => {
 module.exports.getProductById = async (req, res) => {
   try {
     const { productId } = req.params;
+    console.log("Fetching product with ID:", productId); 
     const product = await Product.findById(productId);
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
+    console.log("Found product:", product); 
     res.status(200).json({ message: "Product fetched successfully!", product });
   } catch (error) {
-    console.log(error);
+    console.error("Error fetching product:", error);
     res
       .status(500)
-      .json({ message: "Error fetching products!", error: error.message });
+      .json({ message: "Error fetching product", error: error.message });
   }
 };
 
@@ -84,5 +86,30 @@ module.exports.deleteProduct = async (req, res) => {
     res
       .status(500)
       .json({ message: "Product deletion failed", error: error.message });
+  }
+};
+
+module.exports.searchProducts = async (req, res) => {
+  try {
+    const { q } = req.query;
+    if (!q) {
+      return res.status(400).json({ message: "Search query is required" });
+    }
+    console.log("Searching for query:", q); // NEW: Debug log
+    const products = await Product.find({
+      $or: [
+        { title: { $regex: q, $options: "i" } },
+        { category: { $regex: q, $options: "i" } },
+      ],
+    });
+    console.log("Found products:", products.length); // NEW: Debug log
+    res
+      .status(200)
+      .json({ message: "Search results fetched successfully!", products });
+  } catch (error) {
+    console.error("Error searching products:", error); // CHANGED: Improved logging
+    res
+      .status(500)
+      .json({ message: "Error searching products", error: error.message });
   }
 };

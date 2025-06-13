@@ -27,10 +27,17 @@ const ProductDetails = () => {
     const fetchProduct = async () => {
       try {
         setLoading(true);
+        console.log("Fetching product with ID:", productId);
         const response = await axiosInstance.get(`/products/${productId}`);
+        console.log("Product response:", response.data);
         setProduct(response.data.product);
         setLoading(false);
       } catch (err) {
+        console.error("Product fetch error:", {
+          message: err.message,
+          status: err.response?.status,
+          data: err.response?.data,
+        });
         setError("Failed to load product details.");
         setLoading(false);
         console.error("Error fetching product:", err);
@@ -53,7 +60,9 @@ const ProductDetails = () => {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-red-600">{error || "Product not found."}</h2>
+          <h2 className="text-2xl font-bold text-red-600">
+            {error || "Product not found."}
+          </h2>
           <button
             onClick={() => navigate("/")}
             className="mt-4 bg-black text-white px-6 py-2 rounded-md"
@@ -115,7 +124,9 @@ const ProductDetails = () => {
             </p>
             {/* Add to cart button */}
             <button
-              onClick={() => handleAddToCart(product._id, product.price.discounted)}
+              onClick={() =>
+                handleAddToCart(product._id, product.price.discounted)
+              }
               className="w-full flex items-center justify-center gap-2 bg-black text-white font-medium py-3 rounded-md transition-colors duration-200 hover:bg-gray-800"
               aria-label={`Add ${product.title} to cart`}
             >
@@ -130,4 +141,3 @@ const ProductDetails = () => {
 };
 
 export default ProductDetails;
-
