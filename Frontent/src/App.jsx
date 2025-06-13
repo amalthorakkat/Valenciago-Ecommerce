@@ -11,6 +11,7 @@ import FetchByCategory from "./pages/FetchByCategory";
 import AllProducts from "./pages/AllProducts";
 import SearchResults from "./pages/searchResults";
 import Checkout from "./pages/Checkout";
+import ProductDetails from "./pages/ProductDetails";
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
           <Route path="/allProducts" element={<AllProducts/>} />
           <Route path="/results" element={<SearchResults/>}/>
           <Route path="/checkout" element={<Checkout/>} />
+          <Route path="/products/:productId" element={<ProductDetails/>}/>
         </Route>
 
         {/* <Route path='/' element={<FileUpload/>} /> */}

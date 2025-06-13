@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../config/axiosConfig";
 import { BsCartPlus } from "react-icons/bs";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useCart from "../hooks/useCart";
 
 const FetchByCategory = () => {
   const { category } = useParams();
   const [categoryProducts, setCategoryProducts] = useState([]);
   const { handleAddToCart } = useCart();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -22,6 +23,10 @@ const FetchByCategory = () => {
     fetchProducts();
   }, [category]);
 
+  const handleProductClick = (productId) => {
+    navigate(`/products/${productId}`);
+  };
+
   return (
     <>
       <div>
@@ -30,6 +35,7 @@ const FetchByCategory = () => {
             {categoryProducts.map((product) => (
               <div
                 key={product._id}
+                onClick={() => handleProductClick(product._id)}
                 className="bg-white cursor-pointer border border-gray-200 rounded-lg shadow-sm overflow-hidden transition-all duration-300 hover:shadow-md hover:-translate-y-1 w-full max-w-[250px] mx-auto"
                 data-aos="fade-up"
                 data-aos-delay={product.aosDelay}
@@ -73,9 +79,10 @@ const FetchByCategory = () => {
                     )}
                   </div>
                   <button
-                    onClick={() =>
-                      handleAddToCart(product._id, product.price.discounted)
-                    }
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAddToCart(product._id, product.price.discounted);
+                    }}
                     className="mt-3 w-full flex items-center justify-center gap-2 bg-black text- text-white font-medium py-2 rounded-md transition-colors duration-200 cursor-pointer "
                     aria-label={`Add ${product.title} to cart`}
                   >

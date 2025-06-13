@@ -4,13 +4,11 @@ import Category from "../components/Category";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 
-
 const AllProducts = () => {
   const [products, setProducts] = useState([]);
   const navigate = useNavigate();
   const [menPoster, setMenPoster] = useState(null);
   const [womenPoster, setWomenPoster] = useState(null);
- 
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -25,6 +23,8 @@ const AllProducts = () => {
 
     fetchProducts();
   }, []);
+
+ 
 
   useEffect(() => {
     const fetchPosters = async () => {
@@ -48,7 +48,7 @@ const AllProducts = () => {
   return (
     <div className="min-h-screen pt-10 ">
       <div className="">
-        <div className=" lg:px-30 xl:px-78 text-2xl sm:text-3xl lg:text-3xl px-8 font-medium flex justify-between items-center" >
+        <div className=" lg:px-30 xl:px-78 text-2xl sm:text-3xl lg:text-3xl px-8 font-medium flex justify-between items-center">
           {/* className="px-78 text-3xl font-medium flex items-center justify-between  " */}
           <h1>Men</h1>
           <button
@@ -60,13 +60,17 @@ const AllProducts = () => {
           </button>
         </div>
         <div className="flex items-center justify-center h-[180px] sm:h-full  mb-10 mt-8 lg:px-30 xl:px-78   ">
-          <img src={menPoster?.image} className=" h-full w-full object-cover object-left " alt="" />
+          <img
+            src={menPoster?.image}
+            className=" h-full w-full object-cover object-left "
+            alt=""
+          />
         </div>
         <Category products={products} category={"Men"} />
       </div>
 
       <div className="py-13 ">
-        <div className=" lg:px-30 xl:px-78 text-2xl px-8 font-medium flex justify-between items-center" >
+        <div className=" lg:px-30 xl:px-78 text-2xl px-8 font-medium flex justify-between items-center">
           {/* className="px-78 text-3xl font-medium flex items-center justify-between  " */}
           <h1>Women</h1>
           <button
@@ -78,7 +82,11 @@ const AllProducts = () => {
           </button>
         </div>
         <div className="flex items-center justify-center h-[180px] sm:h-full  mb-10 mt-8 lg:px-30 xl:px-78  ">
-          <img src={womenPoster?.image} className="h-full w-full object-cover object-center  " alt="" />
+          <img
+            src={womenPoster?.image}
+            className="h-full w-full object-cover object-center  "
+            alt=""
+          />
         </div>
         <Category products={products} category={"Women"} />
       </div>

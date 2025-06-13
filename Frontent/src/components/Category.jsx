@@ -1,9 +1,15 @@
 import React from "react";
 import { BsCartPlus } from "react-icons/bs";
 import useCart from "../hooks/useCart";
+import { useNavigate } from "react-router-dom";
 
 const Category = ({ products, category }) => {
   const { handleAddToCart } = useCart();
+  const navigate = useNavigate();
+
+  const handleProductClick = (productId) => {
+    navigate(`/products/${productId}`);
+  };
   return (
     <div className="px-4 sm:px-6 lg:px-8">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6 md:gap-8 w-full max-w-7xl mx-auto">
@@ -12,6 +18,7 @@ const Category = ({ products, category }) => {
           .map((product) => (
             <div
               key={product._id}
+              onClick={() => handleProductClick(product._id)}
               className="bg-white cursor-pointer border border-gray-200 rounded-lg shadow-sm overflow-hidden transition-all duration-300 hover:shadow-md hover:-translate-y-1 w-full max-w-[250px] mx-auto"
               data-aos="fade-up"
               data-aos-delay={product.aosDelay}
@@ -55,9 +62,10 @@ const Category = ({ products, category }) => {
                   )}
                 </div>
                 <button
-                  onClick={() =>
-                    handleAddToCart(product._id, product.price.discounted)
-                  }
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleAddToCart(product._id, product.price.discounted);
+                  }}
                   className="mt-3 w-full flex items-center justify-center gap-2 bg-black text- text-white font-medium py-2 rounded-md transition-colors duration-200 cursor-pointer "
                   aria-label={`Add ${product.title} to cart`}
                 >
