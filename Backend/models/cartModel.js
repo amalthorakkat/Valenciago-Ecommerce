@@ -14,7 +14,11 @@ const cartItemSchema = new mongoose.Schema({
   price: {
     type: Number,
     required: true,
-    default:0
+    default: 0,
+  },
+  size: {
+    type: String,
+    default: "",
   },
 });
 
@@ -25,11 +29,11 @@ const cartSchema = new mongoose.Schema({
     required: true,
   },
   items: [cartItemSchema],
-  savedItems:[cartItemSchema], //for saved items
-  totalPrice:{
-    type:Number,
-    default:0
-  }
+  savedItems: [cartItemSchema], 
+  totalPrice: {
+    type: Number,
+    default: 0,
+  },
 });
 
 const Cart = mongoose.model("Cart", cartSchema);

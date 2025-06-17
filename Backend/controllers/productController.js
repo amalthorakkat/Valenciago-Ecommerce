@@ -47,26 +47,44 @@ module.exports.createProduct = async (req, res) => {
   }
 };
 
+// module.exports.updateProduct = async (req, res) => {
+//   try {
+//     const { productId } = req.params;
+//     const { productName, category, price, stock } = req.body;
+//     const product = await Product.findOne({ _id: productId });
+
+//     product.productName = productName ? productName : product.productName;
+//     product.category = category ? category : product.category;
+//     product.price = price ? price : product.price;
+//     product.stock = stock ? stock : product.stock;
+
+//     const updateProduct = await product.save();
+//     res
+//       .status(200)
+//       .json({ message: "Products updates successfully", updateProduct });
+//   } catch (error) {
+//     console.log(error);
+//     res
+//       .status(500)
+//       .json({ message: "Products updation failed! ", error: error.message });
+//   }
+// };
+
 module.exports.updateProduct = async (req, res) => {
   try {
     const { productId } = req.params;
-    const { productName, category, price, stock } = req.body;
-    const product = await Product.findOne({ _id: productId });
-
-    product.productName = productName ? productName : product.productName;
-    product.category = category ? category : product.category;
-    product.price = price ? price : product.price;
-    product.stock = stock ? stock : product.stock;
-
-    const updateProduct = await product.save();
-    res
-      .status(200)
-      .json({ message: "Products updates successfully", updateProduct });
+    const productDetails = req.body; // CHANGED: Allow updating all fields
+    const product = await Product.findByIdAndUpdate(productId, productDetails, {
+      new: true,
+      runValidators: true,
+    });
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    res.status(200).json({ message: "Product updated successfully", product });
   } catch (error) {
-    console.log(error);
-    res
-      .status(500)
-      .json({ message: "Products updation failed! ", error: error.message });
+    console.error("Error updating product:", error);
+    res.status(500).json({ message: "Product update failed", error: error.message });
   }
 };
 

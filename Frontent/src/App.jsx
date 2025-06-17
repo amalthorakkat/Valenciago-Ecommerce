@@ -9,7 +9,7 @@ import FileUpload from "./pages/FileUpload";
 import UserLayouts from "./layouts/UserLayouts";
 import FetchByCategory from "./pages/FetchByCategory";
 import AllProducts from "./pages/AllProducts";
-import SearchResults from "./pages/searchResults";
+import SearchResults from "./pages/SearchResults";
 import Checkout from "./pages/Checkout";
 import ProductDetails from "./pages/ProductDetails";
 

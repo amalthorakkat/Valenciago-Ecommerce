@@ -1,3 +1,4 @@
+
 const Cart = require("../models/cartModel");
 const Product = require("../models/productModels");
 
@@ -9,7 +10,7 @@ module.exports.getCart = async (req, res) => {
       "items.productId savedItems.productId"
     );
     if (!cart) {
-      cart = new Cart({ userId, items: [], savedItems: [] });
+      cart = new Cart({ userId, items: [], savedItems: [], totalPrice: 0 });
       await cart.save();
     }
     res.status(200).json(cart);
@@ -19,13 +20,16 @@ module.exports.getCart = async (req, res) => {
   }
 };
 
-exports.addToCart = async (req, res) => {
+module.exports.addToCart = async (req, res) => {
   const { userId } = req.params;
-  const { productId, quantity, price } = req.body;
+  const { productId, quantity, price, size } = req.body; 
 
   try {
     const product = await Product.findById(productId);
     if (!product) return res.status(404).json({ error: "Product not found" });
+    if (quantity > product.stock) {
+      return res.status(400).json({ error: "Quantity exceeds stock" });
+    }
 
     let cart = await Cart.findOne({ userId });
     if (!cart) {
@@ -33,13 +37,14 @@ exports.addToCart = async (req, res) => {
     }
 
     const existingItem = cart.items.find(
-      (item) => item.productId.toString() === productId
+      (item) => item.productId.toString() === productId && item.size === size 
     );
 
     if (existingItem) {
       existingItem.quantity += quantity;
+      existingItem.price = Number(price);
     } else {
-      cart.items.push({ productId, quantity, price: Number(price) });
+      cart.items.push({ productId, quantity, price: Number(price), size }); 
     }
 
     cart.totalPrice = cart.items.reduce((acc, item) => {
@@ -57,7 +62,7 @@ exports.addToCart = async (req, res) => {
 
 module.exports.updateCartItem = async (req, res) => {
   const { userId } = req.params;
-  const { productId, quantity } = req.body;
+  const { productId, quantity, size } = req.body; 
 
   try {
     let cart = await Cart.findOne({ userId });
@@ -66,11 +71,16 @@ module.exports.updateCartItem = async (req, res) => {
     }
 
     const item = cart.items.find(
-      (item) => item.productId.toString() === productId
+      (item) => item.productId.toString() === productId && item.size === size 
     );
 
     if (!item) {
       return res.status(404).json({ error: "Item not found in cart" });
+    }
+
+    const product = await Product.findById(productId);
+    if (quantity > product.stock) {
+      return res.status(400).json({ error: "Quantity exceeds stock" });
     }
 
     item.quantity = quantity;
@@ -88,7 +98,7 @@ module.exports.updateCartItem = async (req, res) => {
 };
 
 module.exports.removeFromCart = async (req, res) => {
-  const { userId, productId } = req.params;
+  const { userId, productId } = req.params; 
 
   try {
     let cart = await Cart.findOne({ userId });
@@ -129,7 +139,7 @@ module.exports.removeFromCart = async (req, res) => {
 
 module.exports.saveForLater = async (req, res) => {
   const { userId } = req.params;
-  const { productId } = req.body;
+  const { productId, size } = req.body; 
 
   try {
     let cart = await Cart.findOne({ userId });
@@ -138,7 +148,7 @@ module.exports.saveForLater = async (req, res) => {
     }
 
     const itemIndex = cart.items.findIndex(
-      (item) => item.productId.toString() === productId
+      (item) => item.productId.toString() === productId && item.size === size 
     );
     if (itemIndex === -1) {
       return res.status(404).json({ error: "Item not found in cart" });
@@ -149,6 +159,7 @@ module.exports.saveForLater = async (req, res) => {
       productId: item.productId,
       quantity: item.quantity,
       price: item.price,
+      size: item.size, 
     });
 
     cart.totalPrice = cart.items.reduce((acc, item) => {
@@ -166,7 +177,7 @@ module.exports.saveForLater = async (req, res) => {
 
 module.exports.moveToCart = async (req, res) => {
   const { userId } = req.params;
-  const { productId } = req.body;
+  const { productId, size } = req.body; 
 
   try {
     let cart = await Cart.findOne({ userId });
@@ -175,7 +186,7 @@ module.exports.moveToCart = async (req, res) => {
     }
 
     const itemIndex = cart.savedItems.findIndex(
-      (item) => item.productId.toString() === productId
+      (item) => item.productId.toString() === productId && item.size === size 
     );
     if (itemIndex === -1) {
       return res.status(404).json({ error: "Item not found in saved items" });
@@ -183,7 +194,7 @@ module.exports.moveToCart = async (req, res) => {
 
     const [item] = cart.savedItems.splice(itemIndex, 1);
     const existingItem = cart.items.find(
-      (i) => i.productId.toString() === productId
+      (i) => i.productId.toString() === productId && i.size === size 
     );
     if (existingItem) {
       existingItem.quantity += item.quantity;
@@ -192,6 +203,7 @@ module.exports.moveToCart = async (req, res) => {
         productId: item.productId,
         quantity: item.quantity,
         price: item.price,
+        size: item.size, 
       });
     }
 
